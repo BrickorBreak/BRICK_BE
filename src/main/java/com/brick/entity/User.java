@@ -13,21 +13,21 @@ import lombok.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  //
-    private Long userId;
+    private Long userId; // 솔하T가 만들어주는 PK ( 자동 생성 X )
 
     @Column(nullable = false, unique = true, length = 50)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+    private String realName; // 이름
 
     @Column(nullable = false, unique = true, length = 50)
-    private String nickname;
+    private String nickName; // 닉네임
 
-    private String mbti;
-    private String intro;
+    private Integer age; // 나이
+
+    // 주소
     private String city;
     private String district;
-    private String imageUrl;
+
+    private String mbti; // mbti
+    private String intro; // 소개글
+    private String imageUrl; // 이미지
 }
