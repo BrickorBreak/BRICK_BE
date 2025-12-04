@@ -8,12 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // final 붙은 필드(userRepository)를 자동으로 생성자 주입
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
+    // 사용자가 입력한 데이터를 id로 찾는다
     public void updateUser(Long userId, UserRequestDto dto) {
+        // userRepository(db의 창구)에서 id를 찾아 사용자가 입력한 데이터 (dto)를 user (entity) 실제 DB에 넣는다
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not  found"));
         user.setRealName(dto.getRealName());
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // User 엔티티 → UserResponseDto로 변환하는 코드 , 그냥 user던지면 보안 위험
         return UserResponseDto.builder()
                 .userId(user.getUserId())
                 .realName(user.getRealName())
