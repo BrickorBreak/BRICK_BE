@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface UserFoodPreferenceRepository extends JpaRepository<UserFoodPreference, Long> {
-    List<UserFoodPreference> findByUser(User user);
+public interface FoodCategoryRepository extends JpaRepository<FoodCategoryRepository, Long> {
+
 }
