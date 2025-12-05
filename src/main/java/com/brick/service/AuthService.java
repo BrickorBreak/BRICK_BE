@@ -5,7 +5,7 @@ import com.brick.dto.SignUpRequestDto;
 
 public interface AuthService {
 
-    Long Signup(SignUpRequestDto dto);
-
     Long login(LoginRequestDto dto);
+
+    Long SingUp(SignUpRequestDto dto);
 }
