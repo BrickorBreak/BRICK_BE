@@ -2,6 +2,7 @@ package com.brick.service;
 
 import com.brick.entity.FoodCategory;
 import com.brick.entity.UserFoodPreference;
+import com.brick.repository.FoodCategoryRepository;
 import com.brick.repository.UserFoodPreferenceRepository;
 import com.brick.repository.UserRepository;
 import com.brick.dto.PreferenceResponseDto;
@@ -16,14 +17,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserPreferenceServiceImpl implements UserPreferenceService {
     private final UserRepository userRepository;
-    private UserFoodPreferenceRepository preferenceRepository;
+    private final UserFoodPreferenceRepository preferenceRepository;
+    private final FoodCategoryRepository foodCategoryRepository;
+
+    // 유저가 취향으로 [ 1 , 3 , 7 ] 선택 가정
 
     @Override
     public void saveUserPreferences(Long userId, List<Long> foodIds) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저 없음 : UserPreferenceServcie 확인하자"));
 
+    for(Long foodId : foodIds) {
+        //  foodId가 1이면 FoodCategory( 1, "한식" ) 찾음
+        FoodCategory category= foodCategoryRepository.findById(foodId)
+                .orElseThrow(() -> new RuntimeException("음식 카테 고리 없음"));
 
+                UserFoodPreference userFoodPreference = UserFoodPreference.builder()
+                        .user(user)
+                        .foodCategory(category)
+                        .build();
+
+                preferenceRepository.save(userFoodPreference);
+        }
     }
 
     // 코드를 보기전
