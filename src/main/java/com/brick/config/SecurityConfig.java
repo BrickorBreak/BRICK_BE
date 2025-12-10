@@ -14,7 +14,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  //Talend 테스트용
                 .authorizeHttpRequests(auth -> auth
+
 //                        .requestMatchers("/api/v1/auth/**").permitAll() //회원가입/로그인은 인증 없이 허용
+
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        ).permitAll() //회원가입/로그인은 인증 없이 허용
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic -> httpBasic.disable())
