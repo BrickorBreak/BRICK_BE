@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentService{
                 .orElseThrow(() -> new RuntimeException("피드 없음"));
 
         // 피드아이디에 연결된 모든 댓글을 DB에서 가져옴 -> 그 결과 List<Comment> 형태
-        List<Comment> comments = commentRepository.findByFeedId(feedId);
+        List<Comment> comments = commentRepository.findByFeed_FeedId(feedId);
 
         // Comment객체를 프론트에 보내줄 DTO 리스트 (result)를 하나 만들어두는 단계
         // 객체를 프론트에 그대로 전달 할 수 없으니까
