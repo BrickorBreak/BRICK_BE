@@ -16,18 +16,18 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long commentId;
 
     // 댓글 : 피드 = N : 1 관계
     // LAZY는 성능 최적화 -> 현재 '댓글'만 필요한데 굳이 피드나 사용자 정보 가져올 필요 없기에
     // 그 반대는 EAGER
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feedId" , nullable = false )
+    @JoinColumn(name = "feed_id" , nullable = false )
     private Feed feed;
 
     // 댓글 : 사용자 = N : 1 관계
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId" , nullable = false)
+    @JoinColumn(name = "user_id" , nullable = false)
     private User user;
 
     @Column(nullable = false , columnDefinition = "TEXT")
