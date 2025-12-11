@@ -12,10 +12,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())  //Talend 테스트용
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/v1/auth/**").permitAll() //회원가입/로그인은 인증 없이 허용
-                        .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 )
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(form -> form.disable());
@@ -23,3 +23,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
