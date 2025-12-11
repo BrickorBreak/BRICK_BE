@@ -15,11 +15,11 @@ public class UserFoodPreference {
 
     // 유저 한명은 여러 유저의 취향과 연결
     @ManyToOne // 여러 취향(UserFoodPreference) : 유저(User) = Many : One
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     // 음식 카테고리(일식 : 2번 )은 여러 유저의 취향 ( 10 , 11 , 12번 user)와 연결
     @ManyToOne // 여러 취향(UserFoodPreference) : 음식 카테고리(FoodCategory) = Many : One
-    @JoinColumn(name = "foodCategoryId")
+    @JoinColumn(name = "food_category_id")
     private FoodCategory foodCategory;
 }
