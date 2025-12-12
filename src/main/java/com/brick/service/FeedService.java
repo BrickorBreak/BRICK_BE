@@ -101,7 +101,10 @@ public class FeedService {
 
     //특정 피드 9장 조회
     public List<FeedImage> getFeedImages(Long feedId) {
-        return feedImageRepository.findByFeedIdOrderBySequence(feedId);
+        List<FeedImage> images =
+                feedImageRepository.findByFeedIdOrderBySequenceAsc(feedId);
+
+        return images == null ? List.of() : images;
     }
 
     //홈 전체 피드

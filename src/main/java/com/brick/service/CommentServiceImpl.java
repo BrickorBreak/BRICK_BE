@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService{
     // 댓글 조회
     private CommentResponseDto toDto(Comment comment) {
         return CommentResponseDto.builder()
-                .id(comment.getId())
+                .commentId(comment.getCommentId())
                 .userId(comment.getUser().getUserId()) // user참조 하니까 user에서 가져와야됨
                 .nickname(comment.getUser().getNickName())
                 .content(comment.getContent())
