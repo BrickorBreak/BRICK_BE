@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FeedImageRepository extends JpaRepository<FeedImage, Long> {
 
-    List<FeedImage> findByFeedIdOrderBySequence(Long feedId);
+    List<FeedImage> findByFeedIdOrderBySequenceAsc(Long feedId);
 
     int countByFeedId(Long feedId);
 

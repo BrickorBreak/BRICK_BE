@@ -32,9 +32,10 @@ public class FeedController {
     }
 
     //특정 유저 피드의 9개 사진'
-    @GetMapping("{feedId}/images")
+    @GetMapping("/{feedId}/images")
     public List<FeedImage> feedImages(@PathVariable Long feedId) {
-        return feedService.getFeedImages(feedId);
+        List<FeedImage> images = feedService.getFeedImages(feedId);
+        return images == null ? List.of() : images;
     }
 
     @GetMapping
