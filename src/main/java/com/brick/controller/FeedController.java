@@ -1,5 +1,6 @@
 package com.brick.controller;
 
+import com.brick.dto.HomeFeedResponse;
 import com.brick.entity.Feed;
 import com.brick.entity.FeedImage;
 import com.brick.service.FeedService;
@@ -41,6 +42,12 @@ public class FeedController {
     @GetMapping
     public List<Feed> allFeeds() {
         return feedService.getAllFeeds();
+    }
+
+    // 메인 피드
+    @GetMapping("home")
+    public List<HomeFeedResponse> homeFeeds(){
+        return feedService.getHomeFeeds();
     }
 
 }
