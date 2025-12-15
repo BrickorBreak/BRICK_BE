@@ -139,7 +139,8 @@ public class FeedService {
             for(FeedImage img : feedImages){
                 FeedImageDto dto = new FeedImageDto(
                         img.getImageUrl(),
-                        img.getSequence()
+                        img.getSequence(),
+                        img.getTakenTime()
                 );
                 imageDtos.add(dto);
             }
