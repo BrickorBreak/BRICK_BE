@@ -15,6 +15,7 @@ public class User {
     // 프론트에서 다 작성해야 통과 되는데 여기서 다 not null을 걸어야 하는거 아닌가 ? 하는 의문
 
     @Id
+    @Column(name = "user_id")
     private Long userId; // 솔하T가 만들어주는 PK ( 자동 생성 X )
 
     @Column(nullable = false, length = 50)

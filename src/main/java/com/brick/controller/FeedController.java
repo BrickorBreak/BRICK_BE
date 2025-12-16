@@ -1,5 +1,6 @@
 package com.brick.controller;
 
+import com.brick.dto.HomeFeedResponse;
 import com.brick.entity.Feed;
 import com.brick.entity.FeedImage;
 import com.brick.service.FeedService;
@@ -32,14 +33,21 @@ public class FeedController {
     }
 
     //특정 유저 피드의 9개 사진'
-    @GetMapping("{feedId}/images")
+    @GetMapping("/{feedId}/images")
     public List<FeedImage> feedImages(@PathVariable Long feedId) {
-        return feedService.getFeedImages(feedId);
+        List<FeedImage> images = feedService.getFeedImages(feedId);
+        return images == null ? List.of() : images;
     }
 
     @GetMapping
     public List<Feed> allFeeds() {
         return feedService.getAllFeeds();
+    }
+
+    // 메인 피드
+    @GetMapping("home")
+    public List<HomeFeedResponse> homeFeeds(){
+        return feedService.getHomeFeeds();
     }
 
 }
