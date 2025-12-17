@@ -64,17 +64,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long login(LoginRequestDto dto) {
 
-        //ID로 계정 조회하기 !
         AuthUser authUser = authUserRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 ID입니다."));
 
-        //비밀번호도 검증하고 !
         if (!encoder.matches(dto.getPw(), authUser.getPw())) {
             throw new RuntimeException("비밀번호가 올바르지 않습니다.");
         }
 
-        //로그인 성공 ! userId 반환 !
         return authUser.getUserId();
     }
+
 }
 
