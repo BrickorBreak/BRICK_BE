@@ -19,9 +19,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
+
                 // CSRF 끔 (JWT 사용)
-                .csrf(csrf -> csrf.disable())
+                http.csrf(csrf -> csrf.disable())
 
                 //세션 사용 안 함
                 .sessionManagement(session ->
