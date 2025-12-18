@@ -26,10 +26,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
+        System.out.println("🔥 JwtAuthenticationFilter 진입");
+
         String token = resolveToken(request);
+
+        System.out.println("🔥 토큰: " + token);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Long userId = jwtTokenProvider.getUserId(token);
+
+            System.out.println("🔥 인증 성공 userId = " + userId);
 
             // 핵심: 인증 객체 생성
             UsernamePasswordAuthenticationToken authentication =
