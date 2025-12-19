@@ -22,19 +22,19 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long SingUp(SignUpRequestDto dto) {
 
-        //ID 중복 체크하기 !
+        // ID 중복 체크
         authUserRepository.findById(dto.getId())
                 .ifPresent(u -> {
                     throw new RuntimeException("이미 존재하는 ID입니다.");
                 });
 
-        //Phone도 중복 체크 !
+        // 전화번호 중복 체크
         authUserRepository.findByPhone(dto.getPhone())
                 .ifPresent(u -> {
                     throw new RuntimeException("이미 존재하는 전화번호입니다.");
                 });
 
-        //AuthUser 먼저 저장 (userId 자동 생성) !
+        // AuthUser 저장
         AuthUser authUser = AuthUser.builder()
                 .id(dto.getId())
                 .pw(encoder.encode(dto.getPw()))
@@ -44,10 +44,9 @@ public class AuthServiceImpl implements AuthService {
 
         AuthUser savedAuthUser = authUserRepository.save(authUser);
 
-        //여기서 바로 DB가 userId 자동으로 만들어줌 !
         Long newUserId = savedAuthUser.getUserId();
 
-        //User 테이블에 기본 유저 생성 !
+        // User 테이블 기본 데이터 생성
         User user = User.builder()
                 .userId(newUserId)
                 .realName("미입력")
@@ -56,9 +55,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        //채연이가 사용할 userId 드디어 반환 !
         return newUserId;
-
     }
 
     @Override
@@ -73,6 +70,4 @@ public class AuthServiceImpl implements AuthService {
 
         return authUser.getUserId();
     }
-
 }
-
