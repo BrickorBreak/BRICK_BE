@@ -44,18 +44,7 @@ public class AuthServiceImpl implements AuthService {
 
         AuthUser savedAuthUser = authUserRepository.save(authUser);
 
-        Long newUserId = savedAuthUser.getUserId();
-
-        // User 테이블 기본 데이터 생성
-        User user = User.builder()
-                .userId(newUserId)
-                .realName("미입력")
-                .nickName("미입력")
-                .build();
-
-        userRepository.save(user);
-
-        return newUserId;
+        return savedAuthUser.getAuthUserId();
     }
 
     @Override
@@ -68,6 +57,6 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("비밀번호가 올바르지 않습니다.");
         }
 
-        return authUser.getUserId();
+        return authUser.getAuthUserId();
     }
 }
