@@ -13,5 +13,4 @@ public class UserRequestDto {
     private String nickName;   // 닉네임
     private String mbti;       // MBTI
     private String intro;      // 소개글
-    private String imageUrl;   // 이미지 URL
 }

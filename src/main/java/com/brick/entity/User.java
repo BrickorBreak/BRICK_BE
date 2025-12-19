@@ -18,11 +18,11 @@ public class User {
     @Column(name = "user_id")
     private Long userId; // 솔하T가 만들어주는 PK ( 자동 생성 X )
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String realName; // 이름
 
     // unique걸어서 중복 방지
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(unique = true, length = 50)
     private String nickName; // 닉네임
 
     private Integer age; // 나이

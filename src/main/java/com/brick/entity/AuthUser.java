@@ -9,11 +9,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
+
 public class AuthUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId; //PK (DB 자동 생성됨 !)
+    private Long authUserId; //PK (DB 자동 생성됨 !)
 
     @Column(nullable = false, unique = true, length = 50)
     private String id;
