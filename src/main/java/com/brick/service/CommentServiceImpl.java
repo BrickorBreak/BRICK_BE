@@ -23,11 +23,11 @@ public class CommentServiceImpl implements CommentService{
 
     // 댓글 생성
     @Override
-    public CommentResponseDto create(Long feedId, CommentRequestDto dto) {
+    public CommentResponseDto create(Long userId, Long feedId, CommentRequestDto dto) {
        Feed feed = feedRepository.findById(feedId) // /api/v1/feeds/10/comments url에서 가져옴 -> feedId 써도 됨
                .orElseThrow(() -> new RuntimeException("피드가 없음"));
 
-       User user = userRepository.findById(dto.getUserId()) // request로 들어오니까 dto에서 꺼내써야됨
+       User user = userRepository.findById(userId) // request로 들어오니까 dto에서 꺼내써야됨
                .orElseThrow(() -> new RuntimeException("유저가 없음"));
 
        // 객체 만드는 방법 중 하나 builder
