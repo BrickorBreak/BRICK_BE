@@ -17,7 +17,9 @@ public class FeedController {
 
     private final FeedService feedService;
 
-    // 사진 저장 (JWT 기반)
+   
+    // 이미지 저장
+
     @PostMapping("/image")
     public void saveImage(
             @AuthenticationPrincipal Long userId,
@@ -27,7 +29,9 @@ public class FeedController {
         feedService.saveImage(userId, imageUrl, foodId);
     }
 
-    // 내 마이페이지 피드
+
+    // 내 피드
+
     @GetMapping("/my")
     public List<Feed> myFeeds(
             @AuthenticationPrincipal Long userId
@@ -35,22 +39,37 @@ public class FeedController {
         return feedService.getUserFeeds(userId);
     }
 
-    // 특정 피드의 이미지들
+
+    // 🖼특정 피드 이미지
+
     @GetMapping("/{feedId}/images")
     public List<FeedImage> feedImages(@PathVariable Long feedId) {
-        List<FeedImage> images = feedService.getFeedImages(feedId);
-        return images == null ? List.of() : images;
+        return feedService.getFeedImages(feedId);
     }
 
-    // 전체 피드
+
+    // 전체 피드 (테스트용)
+
     @GetMapping
     public List<Feed> allFeeds() {
         return feedService.getAllFeeds();
     }
 
+
     // 메인 홈 피드
+
     @GetMapping("/home")
     public List<HomeFeedResponse> homeFeeds() {
         return feedService.getHomeFeeds();
+    }
+
+
+    // 🍽음식 카테고리별 홈 피드
+
+    @GetMapping("/category/{foodCategoryId}")
+    public List<HomeFeedResponse> feedsByCategory(
+            @PathVariable Long foodCategoryId
+    ) {
+        return feedService.getFeedsByFoodCategory(foodCategoryId);
     }
 }
