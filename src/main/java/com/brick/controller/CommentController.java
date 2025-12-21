@@ -5,6 +5,7 @@ import com.brick.dto.CommentResponseDto;
 import com.brick.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,10 @@ public class CommentController {
         @PostMapping("/feeds/{feedId}/comments")
         public ResponseEntity<CommentResponseDto> createComment(
                 @PathVariable Long feedId,
-                @RequestBody CommentRequestDto dto
+                @RequestBody CommentRequestDto dto,
+                @AuthenticationPrincipal Long userId
         ){
-            CommentResponseDto response = commentService.create(feedId,dto);
+            CommentResponseDto response = commentService.create(userId, feedId, dto);
             return ResponseEntity.ok(response);
         }
 

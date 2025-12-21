@@ -25,9 +25,9 @@ public class UserPreferenceServiceImpl implements UserPreferenceService {
     @Override
     public void saveUserPreferences(Long userId, List<Long> foodIds) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저 없음 : UserPreferenceServcie 확인하자"));
+                .orElseGet(() -> userRepository.save(User.builder().userId(userId).build())); // 여기서 계속 터지는데 user테이블이 안만들어져서 발생함
 
-    for(Long foodId : foodIds) {
+        for(Long foodId : foodIds) {
         //  foodId가 1이면 FoodCategory( 1, "한식" ) 찾음
         FoodCategory category= foodCategoryRepository.findById(foodId)
                 .orElseThrow(() -> new RuntimeException("음식 카테 고리 없음"));
