@@ -42,7 +42,13 @@ public class UserServiceImpl implements UserService{
         user.setMbti(dto.getMbti());
         user.setIntro(dto.getIntro());
 
+
+        // 저장해야 됨
         userRepository.save(user);
+
+
+        userRepository.save(user);
+
     }
 
     @Override
