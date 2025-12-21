@@ -27,6 +27,9 @@ public class UserServiceImpl implements UserService{
         user.setIntro(dto.getIntro());
         user.setImageUrl(dto.getImageUrl());
 
+        // 저장해야 됨
+        userRepository.save(user);
+
     }
 
     @Override
