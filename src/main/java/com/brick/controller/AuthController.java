@@ -1,12 +1,18 @@
 package com.brick.controller;
 
+import com.brick.dto.CreateRoomRequest;
+import com.brick.dto.CreateRoomResponse;
 import com.brick.dto.LoginRequestDto;
 import com.brick.dto.SignUpRequestDto;
 import com.brick.security.JwtTokenProvider;
 import com.brick.service.AuthService;
+import com.brick.service.ChatAuthUtil;
+import com.brick.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 
