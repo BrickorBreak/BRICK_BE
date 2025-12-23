@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "feeds")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,11 +23,11 @@ public class Feed {
     private Long userId;
 
     @Column(nullable = false)
-    private LocalDate feedDate; // 하루 기준 날짜
+    private LocalDate feedDate;
 
-    @Column(nullable = false)
-    private Boolean isCompleted; //4시에 다 채워졌는지 안 채워졌는지 확인
-    
+    @Column(name = "is_completed", nullable = false)
+    private Boolean completed;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 }
-

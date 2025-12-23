@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -23,20 +22,15 @@ public class SecurityConfig {
 
         http
                 .cors(Customizer.withDefaults())
-
-                // CSRF 끔 (JWT 사용)
                 .csrf(csrf -> csrf.disable())
-
-                // 세션 사용 안 함
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ 프리플라이트(OPTIONS) 무조건 허용
+                        // 프리플라이트
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                        // 인증 없이 허용
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/swagger-ui/**",
@@ -45,16 +39,19 @@ public class SecurityConfig {
                                 "/uploads/**"
                         ).permitAll()
 
+
+                        .requestMatchers(
+                                "/api/v1/photos/**",
+                                "/api/v1/feeds/**",
+                                "/api/v1/users/**"
+                        ).authenticated()
+
                         .anyRequest().authenticated()
                 )
-
-                // JWT 필터 추가
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
                 )
-
-                // 기본 로그인 방식 비활성화
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(formLogin -> formLogin.disable());
 

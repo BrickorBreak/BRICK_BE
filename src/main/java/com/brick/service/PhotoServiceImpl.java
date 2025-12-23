@@ -26,30 +26,46 @@ public class PhotoServiceImpl implements PhotoService {
             Double confidence
     ) {
 
-        // 오늘 날짜 피드 찾거나 생성
+        // 오늘 날짜 feed 찾기 or 생성
         Feed feed = feedRepository
                 .findByUserIdAndFeedDate(userId, LocalDate.now())
                 .orElseGet(() -> feedRepository.save(
                         Feed.builder()
                                 .userId(userId)
                                 .feedDate(LocalDate.now())
-                                .isCompleted(false)
+                                .completed(false)
+                                .createdAt(LocalDateTime.now())
                                 .build()
                 ));
 
-        // sequence 계산
-        int sequence = feedImageRepository.countByFeedId(feed.getFeedId()) + 1;
+        // 현재 이미지 개수
+        int currentCount = feedImageRepository.countByFeedId(feed.getFeedId());
 
-        // FeedImage 생성
+        if (currentCount >= 9) {
+            throw new RuntimeException("이미 9장 모두 저장되었습니다.");
+        }
+
+        int sequence = currentCount + 1;
+
+        // 이미지 URL (지금은 임시)
+        String imageUrl = "https://picsum.photos/600?random=" + System.currentTimeMillis() + ".png";
+
+        // FeedImage 저장
         FeedImage feedImage = FeedImage.builder()
                 .feedId(feed.getFeedId())
                 .userId(userId)
-                .imageUrl("/uploads/temp.png") // 🔥 다음 단계에서 실제 저장
+                .imageUrl(imageUrl)
                 .sequence(sequence)
                 .takenTime(LocalDateTime.now())
                 .foodCategoryId(categoryId)
                 .build();
 
         feedImageRepository.save(feedImage);
+
+        // 9장 다 찼으면 feed 완료 처리
+        if (sequence == 9) {
+            feed.setCompleted(true);
+            feedRepository.save(feed);
+        }
     }
 }
