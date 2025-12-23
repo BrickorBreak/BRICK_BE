@@ -12,6 +12,6 @@ public interface UserFoodPreferenceRepository
     // 유저 기준 조회
     List<UserFoodPreference> findByUser(User user);
 
-    // 음식 카테고리 기준 조회 (이번 에러의 핵심)
+    // 음식 카테고리 기준 조회
     List<UserFoodPreference> findByFoodCategory_FoodCategoryId(Long foodCategoryId);
 }
