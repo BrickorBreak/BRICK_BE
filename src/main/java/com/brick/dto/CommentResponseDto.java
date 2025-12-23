@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class CommentResponseDto {
     private Long commentId;
