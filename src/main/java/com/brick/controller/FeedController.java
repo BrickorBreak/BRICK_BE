@@ -40,7 +40,7 @@ public class FeedController {
     }
 
 
-    // 🖼특정 피드 이미지
+    // 특정 피드 이미지
 
     @GetMapping("/{feedId}/images")
     public List<FeedImage> feedImages(@PathVariable Long feedId) {
@@ -64,7 +64,7 @@ public class FeedController {
     }
 
 
-    // 🍽음식 카테고리별 홈 피드
+    // 음식 카테고리별 홈 피드
 
     @GetMapping("/category/{foodCategoryId}")
     public List<HomeFeedResponse> feedsByCategory(
