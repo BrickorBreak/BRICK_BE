@@ -2,6 +2,7 @@
 
 package com.brick.service;
 
+import com.brick.common.FileStore;
 import com.brick.entity.Feed;
 import com.brick.entity.FeedImage;
 import com.brick.repository.FeedImageRepository;
@@ -20,6 +21,7 @@ public class FeedServiceImpl implements FeedService {
 
     private final FeedRepository feedRepository;
     private final FeedImageRepository feedImageRepository;
+    private final FileStore fileStore;
 
     @Override
     public void saveImage(
@@ -48,7 +50,7 @@ public class FeedServiceImpl implements FeedService {
         }
 
         // 임시 이미지 URL
-        String imageUrl = "/uploads/temp.png";
+        String imageUrl = fileStore.save(image);
 
         feedImageRepository.save(
                 FeedImage.builder()
