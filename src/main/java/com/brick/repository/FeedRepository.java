@@ -19,5 +19,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     List<Feed> findByIsCompletedTrueOrderByFeedDateDesc();
 
-
+    // 추가: 특정 유저들 + 완료된 피드만 조회
+    List<Feed> findByUserIdInAndIsCompletedTrueOrderByFeedDateDesc(List<Long> userIds);
 }
