@@ -42,7 +42,7 @@ public class FeedController {
     public List<FeedImage> feedImages(@PathVariable Long feedId) {
         return feedService.getFeedImages(feedId);
     }
-// ⛔ 아래는 지금 당장은 없어도 됨 (주석 or 삭제 가능)
+// 아래는 지금 당장은 없어도 됨 (주석 or 삭제 가능)
 /*
 @GetMapping
 public List<Feed> allFeeds() {
