@@ -22,6 +22,7 @@ public class CommentController {
                 @RequestBody CommentRequestDto dto,
                 @AuthenticationPrincipal Long userId
         ){
+
             CommentResponseDto response = commentService.create(userId, feedId, dto);
             return ResponseEntity.ok(response);
         }
