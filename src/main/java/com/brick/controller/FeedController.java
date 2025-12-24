@@ -42,23 +42,27 @@ public class FeedController {
     public List<FeedImage> feedImages(@PathVariable Long feedId) {
         return feedService.getFeedImages(feedId);
     }
-// 아래는 지금 당장은 없어도 됨 (주석 or 삭제 가능)
-/*
-@GetMapping
-public List<Feed> allFeeds() {
-    return feedService.getAllFeeds();
-}
 
-@GetMapping("/home")
-public List<HomeFeedResponse> homeFeeds() {
-    return feedService.getHomeFeeds();
-}
+    @GetMapping
+    public List<Feed> allFeeds() {
+        return feedService.getAllFeeds();
+    }
 
-@GetMapping("/category/{foodCategoryId}")
-public List<HomeFeedResponse> feedsByCategory(
-        @PathVariable Long foodCategoryId
-) {
-    return feedService.getFeedsByFoodCategory(foodCategoryId);
-}
-*/
+
+    // 메인 홈 피드
+
+    @GetMapping("/home")
+    public List<HomeFeedResponse> homeFeeds() {
+        return feedService.getHomeFeeds();
+    }
+
+
+    // 음식 카테고리별 홈 피드
+
+    @GetMapping("/category/{foodCategoryId}")
+    public List<HomeFeedResponse> feedsByCategory(
+            @PathVariable Long foodCategoryId
+    ) {
+        return feedService.getFeedsByFoodCategory(foodCategoryId);
+    }
 }
