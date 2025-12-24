@@ -37,13 +37,14 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/uploads/**",
+                                "/api/v1/feeds/**",
+                                "/api/v1/photos/**",
+                                "/api/v1/comments/**",
                                 "/ws/**"
                         ).permitAll()
 
 
                         .requestMatchers(
-                                "/api/v1/photos/**",
-                                "/api/v1/feeds/**",
                                 "/api/v1/users/**"
                         ).authenticated()
 

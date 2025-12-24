@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
@@ -27,8 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.startsWith("/v3/api-docs");
     }
 
-
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -39,28 +38,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("🔥 JwtAuthenticationFilter 진입");
 
         String token = resolveToken(request);
-
         System.out.println("🔥 토큰: " + token);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Long userId = jwtTokenProvider.getUserId(token);
+        if (token != null
+                && jwtTokenProvider.validateToken(token)
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            Long userId = jwtTokenProvider.getUserId(token);
             System.out.println("🔥 인증 성공 userId = " + userId);
 
-            // 핵심: 인증 객체 생성
+            // ✅ 권한 1개라도 넣어주기 (403 방지)
+            List<SimpleGrantedAuthority> authorities =
+                    List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            userId,          // principal (로그인 유저 식별자)
-                            null,
-                            List.of()         // 권한 (지금은 비워도 OK)
+                            userId,     // principal
+                            null,       // credentials
+                            authorities // authorities
                     );
 
             authentication.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request)
             );
 
-            // SecurityContext에 등록
+            // ✅ SecurityContext에 등록
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // ✅ 확인용 로그 (여기 꼭!)
+            var a = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("✅ auth=" + a);
+            System.out.println("✅ isAuth=" + (a != null && a.isAuthenticated()));
+            System.out.println("✅ roles=" + (a != null ? a.getAuthorities() : null));
         }
 
         filterChain.doFilter(request, response);
