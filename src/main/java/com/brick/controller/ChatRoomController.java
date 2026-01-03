@@ -1,5 +1,6 @@
 package com.brick.controller;
 
+import com.brick.dto.ChatRoomSummaryResponse;
 import com.brick.dto.CreateRoomRequest;
 import com.brick.dto.CreateRoomResponse;
 import com.brick.service.ChatRoomService;
@@ -31,4 +32,12 @@ public class ChatRoomController {
         Long requesterId = ChatAuthUtil.getUserIdFormSecurityContext();
         return chatRoomService.getMyRoomIds(requesterId);
     }
+
+    @GetMapping("/rooms/summary")
+    public List<ChatRoomSummaryResponse> getMyChatRooms() {
+        Long requesterId = ChatAuthUtil.getUserIdFormSecurityContext();
+        return chatRoomService.getMyChatRooms(requesterId);
+    }
+
+
 }

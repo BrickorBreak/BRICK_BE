@@ -25,4 +25,6 @@ public interface ChatRoomMemberRepository extends JpaRepository<ChatRoomMember, 
     """)
     // 유저 id에 방 번호 조회
     List<Long> findRoomIdsByUserId(Long userId);
+
+    List<ChatRoomMember> findByRoom_RoomId(Long roomId);
 }

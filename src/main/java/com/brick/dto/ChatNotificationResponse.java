@@ -5,15 +5,13 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-// 방에 메세지 도착했으면 프론트에 띄울 정보
 @Getter
 @AllArgsConstructor
-public class ChatMessageResponse {
-    private Long messageId;
-    private Long roomId;
+public class ChatNotificationResponse {
+
+    private Long roomId;        // 어디서 온 메시지인지
     private Long senderId;
     private String senderName;
-    private String senderImageUrl;
-    private String content;
+    private String content;     // 메시지 미리보기
     private LocalDateTime createdAt;
 }
