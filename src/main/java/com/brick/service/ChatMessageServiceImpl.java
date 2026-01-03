@@ -8,65 +8,85 @@ import com.brick.repository.ChatMessageRepository;
 import com.brick.repository.ChatRoomMemberRepository;
 import com.brick.repository.ChatRoomRepository;
 import com.brick.repository.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ChatMessageServiceImpl implements ChatMessageService{
+public class ChatMessageServiceImpl implements ChatMessageService {
+
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
 
-
     @Override
     public ChatMessageResponse send(Long roomId, Long senderId, String content) {
-        // 메세지 내용 있는지 검사
-        if(content == null || content.trim().isEmpty()){
-            throw new RuntimeException("메세지 내용이 비었어요 ^^ ");
+
+        // 메시지 내용 검증
+        if (content == null || content.trim().isEmpty()) {
+            throw new RuntimeException("메세지 내용이 비었습니다.");
         }
-        // 방마다 멤버 체크
-        boolean isMember = chatRoomMemberRepository.existsByRoom_RoomIdAndUser_UserId(roomId,senderId);
-        if(!isMember){
-            throw new RuntimeException("해당 방의 멤버가 아닙니다");
+
+        // 방 멤버 검증
+        boolean isMember =
+                chatRoomMemberRepository.existsByRoom_RoomIdAndUser_UserId(roomId, senderId);
+        if (!isMember) {
+            throw new RuntimeException("해당 방의 멤버가 아닙니다.");
         }
-        // 채팅방
+
+        // 채팅방 조회
         ChatRoom room = chatRoomRepository.findById(roomId)
-                .orElseThrow(()-> new RuntimeException("채팅방이 없습니다"));
-        // 유저 존재
+                .orElseThrow(() -> new RuntimeException("채팅방이 없습니다."));
+
+        // 보낸 사람 조회
         User sender = userRepository.findById(senderId)
-                .orElseThrow(() -> new RuntimeException("유저가 없숨"));
+                .orElseThrow(() -> new RuntimeException("유저가 없습니다."));
 
-        ChatMessage saved = chatMessageRepository.save(new ChatMessage(room,sender,content));
+        //메시지 저장
+        ChatMessage saved =
+                chatMessageRepository.save(new ChatMessage(room, sender, content));
 
+        // 완전한 응답 DTO 반환
         return toResponse(saved);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ChatMessageResponse> getMessages(Long roomId, Long requestId) {
-        // 멤버인지 확인
-        boolean isMember = chatRoomMemberRepository.existsByRoom_RoomIdAndUser_UserId(roomId,requestId);
-        if(!isMember){
-            throw new RuntimeException("해당 방의 멤버가 아닙니다");
+    public List<ChatMessageResponse> getMessages(Long roomId, Long requesterId) {
+
+        // 멤버 검증
+        boolean isMember =
+                chatRoomMemberRepository.existsByRoom_RoomIdAndUser_UserId(roomId, requesterId);
+        if (!isMember) {
+            throw new RuntimeException("해당 방의 멤버가 아닙니다.");
         }
 
-        return chatMessageRepository.findByRoom_RoomIdOrderByCreatedAtAsc(roomId)
-                .stream() // 리스트에 하나씩 꺼내서 처리할 수 있는 줄로 바꿔줌
-                .map(this::toResponse) // 메세지 하나하나를 toResponse로 변환함
-                .toList(); // 리스토로 모아서 반환
+        return chatMessageRepository
+                .findByRoom_RoomIdOrderByCreatedAtAsc(roomId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
-    private ChatMessageResponse toResponse(ChatMessage m){
+
+    /**
+     * ChatMessage → ChatMessageResponse 변환
+     * (메시지 + 보낸 사람 정보까지 포함)
+     */
+    private ChatMessageResponse toResponse(ChatMessage m) {
+        User sender = m.getSender();
+
         return new ChatMessageResponse(
                 m.getMessageId(),
                 m.getRoom().getRoomId(),
-                m.getSender().getUserId(),
+                sender.getUserId(),
+                sender.getNickName(),      // senderName
+                sender.getImageUrl(),      // senderImageUrl
                 m.getContent(),
                 m.getCreatedAt()
         );
