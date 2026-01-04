@@ -10,7 +10,6 @@ import com.brick.repository.ChatMessageRepository;
 import com.brick.repository.ChatRoomMemberRepository;
 import com.brick.repository.ChatRoomRepository;
 import com.brick.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +33,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             throw new RuntimeException("자기 자신과 채팅방을 만들 수 없습니다.");
         }
 
+        // (1) 이미 존재하는 1:1 방이 있으면 그 방으로 리턴
+        List<Long> existingRoomIds =
+                chatRoomMemberRepository.findPrivateRoomIdsBetween(requesterId, targetUserId);
+
+        if (!existingRoomIds.isEmpty()) {
+            return new CreateRoomResponse(existingRoomIds.get(0));
+        }
+
+        // (2) 없으면 새로 생성
         User user = userRepository.findById(requesterId)
                 .orElseThrow(() -> new RuntimeException("유저 없음"));
         User target = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new RuntimeException("상대 유저 없음"));
 
         ChatRoom room = chatRoomRepository.save(new ChatRoom());
-
         chatRoomMemberRepository.save(new ChatRoomMember(room, user));
         chatRoomMemberRepository.save(new ChatRoomMember(room, target));
 
@@ -57,13 +64,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Transactional(readOnly = true)
     public List<ChatRoomSummaryResponse> getMyChatRooms(Long requesterId) {
 
-        List<Long> roomIds =
-                chatRoomMemberRepository.findRoomIdsByUserId(requesterId);
+        List<Long> roomIds = chatRoomMemberRepository.findRoomIdsByUserId(requesterId);
 
         return roomIds.stream().map(roomId -> {
-
-            ChatRoom room = chatRoomRepository.findById(roomId)
-                    .orElseThrow();
 
             ChatRoomMember targetMember =
                     chatRoomMemberRepository.findByRoom_RoomId(roomId).stream()
@@ -76,11 +79,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             var lastMessageOpt =
                     chatMessageRepository.findTopByRoom_RoomIdOrderByCreatedAtDesc(roomId);
 
-            String lastMessage =
-                    lastMessageOpt.map(ChatMessage::getContent).orElse("");
-
-            LocalDateTime lastTime =
-                    lastMessageOpt.map(ChatMessage::getCreatedAt).orElse(null);
+            String lastMessage = lastMessageOpt.map(ChatMessage::getContent).orElse("");
+            LocalDateTime lastTime = lastMessageOpt.map(ChatMessage::getCreatedAt).orElse(null);
 
             return new ChatRoomSummaryResponse(
                     roomId,

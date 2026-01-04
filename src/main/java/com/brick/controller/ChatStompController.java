@@ -30,11 +30,11 @@ public class ChatStompController {
 
         Long senderId = ChatAuthUtil.getUserIdFormPrincipal(principal);
 
-        // 1️⃣ 메시지 저장
+        // 1️⃣ 메시지 DB 저장
         ChatMessageResponse response =
                 chatMessageService.send(roomId, senderId, request.getContent());
 
-        // 2️⃣ 채팅방 구독자에게 메시지 전송
+        // 2️⃣ 채팅방 구독자에게 메시지 브로드캐스트
         messagingTemplate.convertAndSend(
                 "/topic/rooms/" + roomId,
                 response
@@ -50,10 +50,9 @@ public class ChatStompController {
                     ChatNotificationResponse notification =
                             new ChatNotificationResponse(
                                     roomId,
-                                    senderId,
-                                    response.getSenderId().toString(),
-                                    response.getContent(),
-                                    response.getCreatedAt()
+                                    senderId,                  // senderId
+                                    response.getContent(),     // 마지막 메시지
+                                    response.getCreatedAt()    // 시간
                             );
 
                     messagingTemplate.convertAndSend(

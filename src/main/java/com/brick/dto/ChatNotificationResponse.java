@@ -14,4 +14,7 @@ public class ChatNotificationResponse {
     private String senderName;
     private String content;     // 메시지 미리보기
     private LocalDateTime createdAt;
+
+    public ChatNotificationResponse(Long roomId, Long senderId, String content, LocalDateTime createdAt) {
+    }
 }
