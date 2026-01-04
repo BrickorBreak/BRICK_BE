@@ -45,7 +45,8 @@ public class SecurityConfig {
 
 
                         .requestMatchers(
-                                "/api/v1/users/**"
+                                "/api/v1/users/**",
+                                "/api/v1/chat/**"
                         ).authenticated()
 
                         .anyRequest().authenticated()

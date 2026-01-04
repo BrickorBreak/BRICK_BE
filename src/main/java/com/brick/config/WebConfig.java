@@ -16,21 +16,21 @@ public class WebConfig {
         return new WebMvcConfigurer() {
 
             //CORS 설정
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            //@Override
+            //public void addCorsMappings(CorsRegistry registry) {
                 // API
-                registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:8080")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                //registry.addMapping("/api/**")
+                        //.allowedOrigins("http://localhost:5173", "http://localhost:8080")
+                        //.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        //.allowedHeaders("*")
+                        //.allowCredentials(true);
                 // 이미지 파일
-                registry.addMapping("/uploads/**")
-                        .allowedOrigins("http://localhost:5173", "http://localhost:8080")
-                        .allowedMethods("GET", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
+                //registry.addMapping("/uploads/**")
+                        //.allowedOrigins("http://localhost:5173", "http://localhost:8080")
+                        //.allowedMethods("GET", "OPTIONS")
+                        //.allowedHeaders("*")
+                        //.allowCredentials(true);
+            //}
 
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
