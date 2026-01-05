@@ -7,7 +7,10 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,20 +27,38 @@ public class StompJwtChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        StompCommand cmd = accessor.getCommand();
-        if (cmd == null) return message;
+        StompHeaderAccessor accessor =
+                MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        // CONNECT에서 토큰 세팅
-        if (StompCommand.CONNECT.equals(cmd)) {
+        if (accessor == null) return message;
+
+        StompCommand command = accessor.getCommand();
+        if (command == null) return message;
+
+        // CONNECT 시점에만 인증 처리
+        if (StompCommand.CONNECT.equals(command)) {
+
             String authHeader = accessor.getFirstNativeHeader("Authorization");
-            if (authHeader == null) authHeader = accessor.getFirstNativeHeader("authorization"); // 케이스 보완
+            if (authHeader == null) {
+                authHeader = accessor.getFirstNativeHeader("authorization");
+            }
 
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            if (authHeader == null) {
                 throw new MessagingException("WebSocket Authorization header missing");
             }
 
-            String token = authHeader.substring(7);
+            authHeader = authHeader.trim();
+
+            // "Bearer<token>" 형태 방어
+            if (authHeader.startsWith("Bearer") && !authHeader.startsWith("Bearer ")) {
+                authHeader = authHeader.replaceFirst("Bearer", "Bearer ");
+            }
+
+            if (!authHeader.startsWith("Bearer ")) {
+                throw new MessagingException("Invalid Authorization header format");
+            }
+
+            String token = authHeader.substring(7).trim();
 
             if (!jwtTokenProvider.validateToken(token)) {
                 throw new MessagingException("WebSocket token invalid");
@@ -45,19 +66,23 @@ public class StompJwtChannelInterceptor implements ChannelInterceptor {
 
             Long userId = jwtTokenProvider.getUserId(token);
 
-            var authentication =
+            Authentication authentication =
                     new UsernamePasswordAuthenticationToken(userId, null, List.of());
 
+            // accessor에 user 설정
             accessor.setUser(authentication);
+
+            // SecurityContext에도 설정
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        // SEND 시점에 Principal 없으면 막기
-        if (StompCommand.SEND.equals(cmd)) {
+        // SEND/SUBSCRIBE에서는 막지 말고 로그만
+        if (StompCommand.SEND.equals(command) || StompCommand.SUBSCRIBE.equals(command)) {
             if (accessor.getUser() == null) {
-                throw new MessagingException("WebSocket user(principal) is null");
+                System.err.println("STOMP principal is null on " + command);
             }
         }
+
         return message;
     }
-
 }

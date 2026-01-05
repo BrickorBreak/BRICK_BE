@@ -33,4 +33,9 @@ public class ChatMessage {
         this.sender = sender;
         this.content = content;
     }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
