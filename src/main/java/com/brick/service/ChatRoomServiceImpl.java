@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -90,6 +91,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                     lastMessage,
                     lastTime
             );
-        }).toList();
+                })
+                // 최신 메시지 시간 기준 내림차순 정렬 (null은 맨 아래)
+                .sorted(Comparator.comparing(
+                        ChatRoomSummaryResponse::getLastMessageTime,
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                ))
+                .toList();
     }
 }
