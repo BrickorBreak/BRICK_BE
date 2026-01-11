@@ -23,7 +23,9 @@ jobs:
           java-version: 17
 
       - name: Build with Maven
-        run: ./mvnw -DskipTests clean package
+        run: |
+          chmod +x mvnw
+          ./mvnw -DskipTests clean package
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
